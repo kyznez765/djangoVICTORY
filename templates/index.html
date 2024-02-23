@@ -1,10 +1,28 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Магазин</title>
+    <link rel="stylesheet" href="{% static '1.css' %}">
 </head>
 <body>
-   <h2>Магазин</h2>
+    <h2>Магазин</h2>
+    <header>
+          <a href="{% url 'home' %}">Главная</a>
+          <a href="{% url 'home' %}">Корзина</a>
+    </header>
+    <main>
+        {% for one in tovari %}
+             <div class="cart">
+                 <img src="{% static one.image %}" alt="">
+                 <p>{{ one.name }}</p>
+                 <p>{{ one.price }} руб.</p>
+                 <a href="{% url 'buy' one.id %}">
+                     <button>Купить</button>
+                 </a>
+             </div>
+        {% endfor %}
+    </main>
 </body>
 </html>

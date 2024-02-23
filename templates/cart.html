@@ -1,10 +1,41 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Корзина</title>
+    <link rel="stylesheet" href="{% static '1.css' %}">
 </head>
 <body>
      <h2>Корзина</h2>
+     <header>
+          <a href="{% url 'home' %}">Главная</a>
+          <a href="{% url 'tocart' %}">Корзина</a>
+     </header>
+     <table>
+         {% for one in tovari %}
+             <tr>
+                <td>
+                   <button>{{ one.tovar.name }}</button>
+                </td>
+                <td><a href="{% url 'count' -1 one.id %}">
+                    <button> - </button>
+                </a></td>
+                <td>
+                    <button>{{ one.count }}шт</button>
+                </td>
+                 <td><a href="{% url 'count' 1 one.id %}">
+                    <button> + </button>
+                 </a></td>
+                 <td>
+                     <button>{{ one.summa }}р</button>
+                 </td>
+                 <td><a href="{% url 'delete' one.id %}">
+                     <button>Удалить</button>
+                 </a></td>
+             </tr>
+         {% endfor %}
+     </table>
+     <h2>Итог {{ total }} руб.</h2>
 </body>
 </html>
