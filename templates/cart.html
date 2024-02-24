@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Корзина</title>
     <link rel="stylesheet" href="{% static '1.css' %}">
+    <script src="{% static  '1.js' %}" defer></script>
 </head>
 <body>
      <h2>Корзина</h2>
@@ -21,15 +22,11 @@
                 <td><a href="{% url 'count' -1 one.id %}">
                     <button> - </button>
                 </a></td>
-                <td>
-                    <button>{{ one.count }}шт</button>
-                </td>
+                <td>{{ one.count }} шт</td>
                  <td><a href="{% url 'count' 1 one.id %}">
                     <button> + </button>
                  </a></td>
-                 <td>
-                     <button>{{ one.summa }}р</button>
-                 </td>
+                 <td>{{ one.summa }} руб.</td>
                  <td><a href="{% url 'delete' one.id %}">
                      <button>Удалить</button>
                  </a></td>
@@ -37,5 +34,14 @@
          {% endfor %}
      </table>
      <h2>Итог {{ total }} руб.</h2>
+     <hr>
+     <button id="formbut">Оформить</button>
+     <div id="formdiv" hidden>
+         <form action="" method="post" novalidate>
+             {% csrf_token %}
+             {{ formaorder }}
+             <input type="submit" value="Отправить">
+         </form>
+     </div>
 </body>
 </html>
