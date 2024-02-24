@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
+# import telebot
+import requests
 # Create your views here.
 
 
@@ -8,6 +10,8 @@ def index(req):
     items = Tovar.objects.all()
     data = {'tovari': items}
     return render(req, 'index.html', data)
+
+
 
 
 def toCart(req):
@@ -38,6 +42,11 @@ def toCart(req):
                                             total=total, myzakaz=myzakaz,
                                             user=req.user)
             items.delete()
+
+            ##################################################################################
+            # в телеграм
+            telegram(neworder)
+
             return render(req, 'sps.html')
 
     data = {'tovari': items, 'total': total, 'formaorder': forma}
@@ -54,7 +63,7 @@ def buy(req,id):
         getTovar.save()
     else:
         Cart.objects.create(tovar=item, count=1, user=curuser, summa=item.price)
-    data = {}
+        data = {}
     return redirect('home')
 
 
@@ -73,3 +82,13 @@ def cartCount(req, num, id):
     item.summa = item.calcSumma()
     item.save()
     return redirect('tocart')
+
+
+
+def telegram(neworder):
+    token = '7123230685:AAGioh4_I7QBRjK8IPpIOGbS5g0MwvkP9ew'
+    # t.me/VICTORY2024_bot
+    chat = '528849379'
+    message = neworder.user.username + ' ' + neworder.tel + ' ' + neworder.myzakaz
+    url = f"https://api.telegram.org/bot{token}/sendMessage?chat_id={chat}&text={message}"
+    requests.get(url)
