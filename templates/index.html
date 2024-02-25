@@ -3,26 +3,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    {% block head %}
     <title>Магазин</title>
-    <link rel="stylesheet" href="{% static '1.css' %}">
+    <link rel="stylesheet" href="{% static '1.1.1.css' %}">
+    {% endblock head %}
 </head>
 <body>
-    <h2>Магазин</h2>
-    <header>
-          <a href="{% url 'home' %}">Главная</a>
-          <a href="{% url 'tocart' %}">Корзина</a>
+<h1>Заказ Ролл</h1>
+{% block menu %}
+        <header>
+          <div class="header-right">
+
+
+            <div class="menu">
+                <a href="{% url 'home' %}">Главная</a>
+                <a href="{% url 'tocart' %}">Корзина</a>
+
+                {% if not user.username %}
+                    <a href="{% url 'login' %}" class="btn btn-oval">LOGIN</a>
+                {% else %}
+                    <a href="{% url 'logout' %}?next={% url 'home' %}" class="btn btn-oval">LOGOUT</a>
+                {% endif %}
+            </div>
+          </div>
+{% endblock menu %}
+
     </header>
-    <main>
-        {% for one in tovari %}
-             <div class="cart">
-                 <img src="{% static one.image %}" alt="">
-                 <p>{{ one.name }}</p>
-                 <p>{{ one.price }} руб.</p>
-                 <a href="{% url 'buy' one.id %}">
-                     <button>Купить</button>
-                 </a>
-             </div>
-        {% endfor %}
-    </main>
+
+
+<main>
+    {% for one in tovari %}
+        <div class="cart">
+            <img src="{% static one.image %}" alt="">
+            <p>{{ one.name }}</p>
+            <p>{{ one.price }} руб.</p>
+            <a href="{% url 'buy' one.id %}">
+                <button>Купить</button>
+            </a>
+        </div>
+    {% endfor %}
+</main>
 </body>
 </html>

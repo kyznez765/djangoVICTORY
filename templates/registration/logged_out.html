@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static '1.1.1.css' %}">
+{% endblock head %}
+
+
+{% block content %}
+    <h2>Выход</h2>
+    <h4>
+        <a href="{% url 'login' %}">Снова зайти</a>
+    </h4>
+{% endblock %}

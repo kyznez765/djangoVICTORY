@@ -1,0 +1,44 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static '1.1.1.css' %}">
+{% endblock head %}
+
+{% block content %}
+    <h2></h2>
+
+    <div class="container">
+        <h2>Вход</h2>
+
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+
+
+            <table>
+
+                <tr>
+                    <td>{{ from.username.label_tag }}</td>
+                    <td>{{ form.username }}</td>
+                </tr>
+                <tr>
+                    <td>{{ from.password.label_tag }}</td>
+                    <td>{{ form.password }}</td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <a href="{% url 'password_reset' %}">Забыл пароль</a>
+                    </td>
+                </tr>
+
+            </table>
+            <input type="submit" value="Войти">
+        </form>
+
+        <h3></h3>
+            <a href="{% url 'registration' %}">Регистрация</a>
+
+
+    </div>
+
+{% endblock content %}

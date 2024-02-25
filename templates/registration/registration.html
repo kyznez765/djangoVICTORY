@@ -1,0 +1,18 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static '1.1.1.css' %}">
+{% endblock head %}
+
+{% block content %}
+    <h2>Регистрация</h2>
+    <form action="" method="post" novalidate>
+        {% csrf_token %}
+        {% for one in forma %}
+            <div>{{ one.label_tag }} {{ one }}</div>
+            <div>{{ one.errors }}</div>
+        {% endfor %}
+        <input type="submit" value="Отправить">
+    </form>
+
+{% endblock %}

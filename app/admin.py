@@ -6,3 +6,7 @@ admin.site.register(Tovar)
 @admin.register(Cart)
 class Admincart(admin.ModelAdmin):
     list_display = ('user', 'tovar', 'count', 'summa')
+
+    # ----------------------------------------------------------------
+
+

@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect
-from .models import *
-from .forms import *
 # import telebot
 import requests
+from django.shortcuts import render, redirect
+from .models import *
 # Create your views here.
 
 
@@ -10,8 +9,6 @@ def index(req):
     items = Tovar.objects.all()
     data = {'tovari': items}
     return render(req, 'index.html', data)
-
-
 
 
 def toCart(req):
@@ -50,16 +47,16 @@ def toCart(req):
             return render(req, 'sps.html')
 
     data = {'tovari': items, 'total': total, 'formaorder': forma}
-    return render(req,'cart.html', data)
+    return render(req, 'cart.html', data)
 
 
-def buy(req,id):
+def buy(req, id):
     item = Tovar.objects.get(id=id)
     curuser = req.user
     if Cart.objects.filter(tovar=item, user=curuser):
         getTovar = Cart.objects.get(tovar_id=id)
         getTovar.count += 1
-        getTovar.summa =getTovar.calcSumma()
+        getTovar.summa = getTovar.calcSumma()
         getTovar.save()
     else:
         Cart.objects.create(tovar=item, count=1, user=curuser, summa=item.price)
@@ -67,7 +64,7 @@ def buy(req,id):
     return redirect('home')
 
 
-def delete(req,id):
+def delete(req, id):
     item = Cart.objects.get(id=id)
     item.delete()
     return redirect('tocart')
@@ -84,11 +81,51 @@ def cartCount(req, num, id):
     return redirect('tocart')
 
 
-
 def telegram(neworder):
     token = '7123230685:AAGioh4_I7QBRjK8IPpIOGbS5g0MwvkP9ew'
     # t.me/VICTORY2024_bot
     chat = '528849379'
-    message = neworder.user.username + ' ' + neworder.tel + ' ' + neworder.myzakaz
+    message = neworder.user.username + ' ,' + neworder.tel + ' ,' + neworder.myzakaz + ' ,' + neworder.adres
     url = f"https://api.telegram.org/bot{token}/sendMessage?chat_id={chat}&text={message}"
     requests.get(url)
+
+
+# ---------------------------------------------------------------------
+
+
+from .forms import *
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+
+
+def reg(req):
+    if req.POST:
+        f = SignUp(req.POST)  # заполненая форма
+
+        if f.is_valid():  # нет ошибок
+            f.save()
+
+            # достаем данные из формы
+            k1 = f.cleaned_data.get('username')
+            k2 = f.cleaned_data.get('password1')
+            k3 = f.cleaned_data.get('email')
+            k4 = f.cleaned_data.get('first_name')
+            k5 = f.cleaned_data.get('last_name')
+
+            # создаем нового пользователя
+            user = authenticate(username=k1, password=k2)
+            newuser = User.objects.get(username=k1)  # находим в таблице
+            # заполняем поля
+            newuser.email = k3
+            newuser.first_name = k4
+            newuser.last_name = k5
+            newuser.save()
+            # создать запись profileUser и выдать ему бесплатную подписку 1
+            ProfileUser.objects.create(user_id=newuser.id)
+
+            login(req, newuser)  # автологин на сайте
+            return redirect('home')
+    else:
+        f = SignUp()  # пустая форма
+    data = {'forma': f}
+    return render(req, 'registration/registration.html', data)
