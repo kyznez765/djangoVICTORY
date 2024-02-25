@@ -4,33 +4,31 @@
 <head>
     <meta charset="UTF-8">
     {% block head %}
-    <title>Магазин</title>
-    <link rel="stylesheet" href="{% static '1.1.1.css' %}">
+        <title>Магазин</title>
+        <link rel="stylesheet" href="{% static '1.1.1.css' %}">
     {% endblock head %}
 </head>
 <body>
 <h1>Заказ Ролл</h1>
 {% block menu %}
-        <header>
-          <div class="header-right">
+    <header>
+    <div class="header-right">
+        <div class="menu">
+            <a href="{% url 'home' %}">Главная</a>
+            <a href="{% url 'tocart' %}">Корзина</a>
 
-
-            <div class="menu">
-                <a href="{% url 'home' %}">Главная</a>
-                <a href="{% url 'tocart' %}">Корзина</a>
-
-                {% if not user.username %}
-                    <a href="{% url 'login' %}" class="btn btn-oval">LOGIN</a>
-                {% else %}
-                    <a href="{% url 'logout' %}?next={% url 'home' %}" class="btn btn-oval">LOGOUT</a>
-                {% endif %}
-            </div>
-          </div>
+            {% if not user.username %}
+                <a href="{% url 'login' %}" class="btn btn-oval">LOGIN</a>
+            {% else %}
+                <a href="{% url 'logout' %}" class="btn btn-oval">LOGOUT</a>
+            {% endif %}
+        </div>
+    </div>
 {% endblock menu %}
 
-    </header>
+</header>
 
-
+{%  block content %}
 <main>
     {% for one in tovari %}
         <div class="cart">
@@ -43,5 +41,6 @@
         </div>
     {% endfor %}
 </main>
+{% endblock content %}
 </body>
 </html>

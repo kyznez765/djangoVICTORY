@@ -85,7 +85,7 @@ def telegram(neworder):
     token = '7123230685:AAGioh4_I7QBRjK8IPpIOGbS5g0MwvkP9ew'
     # t.me/VICTORY2024_bot
     chat = '528849379'
-    message = neworder.user.username + ' ,' + neworder.tel + ' ,' + neworder.myzakaz + ' ,' + neworder.adres
+    message = neworder.user.username + ' , новый заказ ,' + neworder.tel + ' ,' + neworder.myzakaz + ' ,' + neworder.adres + ' ,' + neworder.email
     url = f"https://api.telegram.org/bot{token}/sendMessage?chat_id={chat}&text={message}"
     requests.get(url)
 
@@ -129,3 +129,10 @@ def reg(req):
         f = SignUp()  # пустая форма
     data = {'forma': f}
     return render(req, 'registration/registration.html', data)
+
+
+from django.contrib.auth import logout as auth_logout
+def logout(req):
+    auth_logout(req)
+    print(123)
+    return redirect('home')
