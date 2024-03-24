@@ -18,9 +18,9 @@
             <a href="{% url 'tocart' %}">Корзина</a>
 
             {% if not user.username %}
-                <a href="{% url 'login' %}" class="btn btn-oval">LOGIN</a>
+                <a href="{% url 'login' %}" class="btn btn-oval">Авторизация</a>
             {% else %}
-                <a href="{% url 'logout' %}" class="btn btn-oval">LOGOUT</a>
+                <a href="{% url 'logout' %}" class="btn btn-oval">Выйти</a>
             {% endif %}
         </div>
     </div>

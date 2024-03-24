@@ -3,7 +3,10 @@ import requests
 from django.shortcuts import render, redirect
 from .models import *
 # Create your views here.
-
+from .forms import *
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout as auth_logout
 
 def index(req):
     items = Tovar.objects.all()
@@ -40,8 +43,7 @@ def toCart(req):
                                             user=req.user)
             items.delete()
 
-            ##################################################################################
-            # в телеграм
+
             telegram(neworder)
 
             return render(req, 'sps.html')
@@ -83,55 +85,44 @@ def cartCount(req, num, id):
 
 def telegram(neworder):
     token = '7123230685:AAGioh4_I7QBRjK8IPpIOGbS5g0MwvkP9ew'
-    # t.me/VICTORY2024_bot
     chat = '528849379'
     message = neworder.user.username + ' , новый заказ ,' + neworder.tel + ' ,' + neworder.myzakaz + ' ,' + neworder.adres + ' ,' + neworder.email
     url = f"https://api.telegram.org/bot{token}/sendMessage?chat_id={chat}&text={message}"
     requests.get(url)
 
 
-# ---------------------------------------------------------------------
-
-
-from .forms import *
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
-
-
 def reg(req):
     if req.POST:
-        f = SignUp(req.POST)  # заполненая форма
+        f = SignUp(req.POST)
 
-        if f.is_valid():  # нет ошибок
+        if f.is_valid():
             f.save()
 
-            # достаем данные из формы
             k1 = f.cleaned_data.get('username')
             k2 = f.cleaned_data.get('password1')
             k3 = f.cleaned_data.get('email')
             k4 = f.cleaned_data.get('first_name')
             k5 = f.cleaned_data.get('last_name')
 
-            # создаем нового пользователя
             user = authenticate(username=k1, password=k2)
-            newuser = User.objects.get(username=k1)  # находим в таблице
-            # заполняем поля
+            newuser = User.objects.get(username=k1)
+
             newuser.email = k3
             newuser.first_name = k4
             newuser.last_name = k5
             newuser.save()
-            # создать запись profileUser и выдать ему бесплатную подписку 1
+
             ProfileUser.objects.create(user_id=newuser.id)
 
-            login(req, newuser)  # автологин на сайте
+            login(req, newuser)
             return redirect('home')
     else:
-        f = SignUp()  # пустая форма
+        f = SignUp()
     data = {'forma': f}
     return render(req, 'registration/registration.html', data)
 
 
-from django.contrib.auth import logout as auth_logout
+
 def logout(req):
     auth_logout(req)
     print(123)
